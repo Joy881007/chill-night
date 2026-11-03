@@ -1,5 +1,5 @@
 """
-把 cwTeX Q 圓體裁成「只含 index.html 用到的字」，並以 base64 嵌回 index.html。
+把 cwTeX Q 明體裁成「只含 index.html 用到的字」，並以 base64 嵌回 index.html。
 
 為什麼：完整字型約 7MB，手機載入太慢；裁切後通常只有幾十 KB。
 注意：之後只要改了頁面上的中文字（包含 <script> 裡的話題），就要重跑一次，
@@ -7,8 +7,11 @@
 
 用法：
   pip install fonttools brotli
-  下載字型：https://github.com/l10n-tw/cwtex-q-fonts-TTFs/raw/master/ttf/cwTeXQYuanZH-Medium.ttf
-  python tools/build-font.py path/to/cwTeXQYuanZH-Medium.ttf
+  下載字型：https://github.com/l10n-tw/cwtex-q-fonts-TTFs/raw/master/ttf/cwTeXQMingZH-Medium.ttf
+  python tools/build-font.py path/to/cwTeXQMingZH-Medium.ttf
+
+想換其他 cwTeX Q 字體（圓體 Yuan、黑體 Hei、楷書 Kai、仿宋 Fangsong）：
+下載對應的 *ZH 檔案、改下面的 FAMILY 名稱，並同步修改 index.html 裡 --f-body 的第一個字體名稱。
 """
 import base64
 import io
@@ -21,7 +24,7 @@ from fontTools.ttLib import TTFont
 
 HTML = Path(__file__).resolve().parent.parent / "index.html"
 START, END = "/*FONT:START*/", "/*FONT:END*/"
-FAMILY = "cwTeX Q Yuan"
+FAMILY = "cwTeX Q Ming"
 
 
 def main(src: str) -> None:
