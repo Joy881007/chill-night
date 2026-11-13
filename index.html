@@ -300,6 +300,43 @@ button{font:inherit;color:inherit}
 .letter .next{margin-top:18px;font-size:13px;color:oklch(0.48 0.05 50);text-align:right}
 .letter .sign{margin-top:6px;text-align:right;font-family:var(--f-latin);font-style:italic;font-size:17px;color:oklch(0.5 0.09 50)}
 
+/* idle bubble (no set playing): calmer, map icon, opens schedule + map */
+.now-bubble .ic-info{display:none}
+.now-bubble.idle .ic-info{display:block}
+.now-bubble.idle .ic-live,.now-bubble.idle .ring,.now-bubble.idle .tag{display:none}
+.now-bubble.idle{box-shadow:inset 0 0 0 4px oklch(1 0 0 / .25),0 10px 28px var(--shadow)}
+
+/* schedule list in the letter */
+.sched{list-style:none;margin:18px 0 0;padding:0;border-top:1px dashed oklch(0.45 0.05 50 / .4)}
+.sched li{display:grid;grid-template-columns:96px 1fr auto;gap:10px;align-items:center;min-height:52px;padding:8px 0;border-bottom:1px dashed oklch(0.45 0.05 50 / .4)}
+.sched time{font-family:var(--f-latin);font-size:18px;letter-spacing:.02em;color:oklch(0.5 0.09 50);white-space:nowrap}
+.sched .who{font-weight:700;font-size:18px;color:oklch(0.28 0.05 40)}
+.sched .st{font-size:12px;padding:1px 9px;border-radius:99px;white-space:nowrap}
+.sched .st.next{background:oklch(0.84 0.105 76 / .3);color:oklch(0.36 0.07 50)}
+.sched .st.live{background:var(--cran-deep);color:var(--ink)}
+.sched li.done{opacity:.45}
+.sched li.done .st{color:oklch(0.45 0.04 50)}
+
+/* site map: ink on the letter paper */
+.map-h{margin-top:26px;font-family:"Noto Serif TC",serif;font-weight:700;font-size:18px;color:oklch(0.28 0.05 40);letter-spacing:.04em}
+.map{display:block;width:100%;height:auto;margin-top:10px;text-anchor:middle;font-family:"Noto Serif TC",serif}
+.map .m-ground{fill:url(#mapDots);stroke:oklch(0.45 0.05 50 / .35);stroke-dasharray:3 4}
+.map .m-dot{fill:oklch(0.45 0.05 50 / .22)}
+.map .m-block{fill:oklch(0.88 0.04 75);stroke:oklch(0.45 0.05 50 / .45)}
+.map .m-tent{fill:oklch(0.36 0.05 38)}
+.map .m-mat{fill:oklch(0.84 0.105 76 / .28);stroke:oklch(0.62 0.1 60 / .6);stroke-dasharray:4 3}
+.map .m-wall{stroke:oklch(0.62 0.1 60);stroke-width:5;stroke-linecap:round}
+.map .m-ink{fill:oklch(0.3 0.04 40)}
+.map .m-ink-line{stroke:oklch(0.3 0.04 40);stroke-width:2}
+.map .m-door{stroke:oklch(0.58 0.09 140);stroke-width:5;stroke-linecap:round}
+.map .m-arrow{fill:none;stroke:oklch(0.5 0.09 140);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.map .m-t{font-size:13px;font-weight:700;fill:oklch(0.28 0.05 40)}
+.map .m-t.on{fill:oklch(0.95 0.025 85)}
+.map .m-t.en{font-family:var(--f-latin);font-style:italic;font-weight:400;font-size:15px}
+.map .m-t.door{fill:oklch(0.42 0.08 140)}
+.map .m-s{font-size:11.5px;font-weight:500;fill:oklch(0.38 0.05 45)}
+.map .m-s.strong{font-weight:700;fill:oklch(0.28 0.05 40)}
+
 /* fairy: a small glowing sprite flies in when a set begins, trailing sparks, and lands on the bubble */
 .sprite{position:fixed;left:0;top:0;width:54px;height:54px;margin:-27px 0 0 -27px;z-index:46;pointer-events:none;will-change:transform}
 .sprite .halo{position:absolute;inset:-24px;border-radius:50%;background:radial-gradient(closest-side,oklch(0.92 0.11 82 / .65),transparent);animation:breathe .6s ease-in-out infinite alternate}
@@ -486,8 +523,9 @@ button{font:inherit;color:inherit}
 <button class="now-bubble" id="nowBtn" type="button" aria-haspopup="dialog" hidden>
   <span class="ring" aria-hidden="true"></span>
   <span class="tag" aria-hidden="true">LIVE</span>
-  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>
-  <span class="sr-only" id="nowLabel">查看現正演出的歌詞</span>
+  <svg class="ic-live" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>
+  <svg class="ic-info" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5v13.5l6-2.5 6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/></svg>
+  <span class="sr-only" id="nowLabel">查看今晚時刻表與場地地圖</span>
 </button>
 <button class="now-callout" id="nowCallout" type="button" hidden><span class="star" aria-hidden="true">✦</span><span id="calloutText"></span></button>
 
@@ -497,12 +535,61 @@ button{font:inherit;color:inherit}
     <span class="seal coin amber" aria-hidden="true">恩</span>
     <div class="paper">
       <button class="x" id="letterClose" type="button" aria-label="關閉"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-      <p class="to" lang="en">Now playing…</p>
+      <p class="to" lang="en" id="letterTo">Now playing…</p>
       <p class="meta" id="letterMeta"></p>
       <h2 id="letterTitle"></h2>
-      <p class="gear" id="letterGear"></p>
-      <ol class="songs" id="letterSongs"></ol>
-      <p class="next" id="letterNext"></p>
+      <div id="modeLive">
+        <p class="gear" id="letterGear"></p>
+        <ol class="songs" id="letterSongs"></ol>
+        <p class="next" id="letterNext"></p>
+      </div>
+      <div id="modeInfo" hidden>
+        <ol class="sched" id="schedList"></ol>
+        <h3 class="map-h">場地地圖</h3>
+        <svg class="map" viewBox="0 0 360 290" role="img" aria-labelledby="mapDesc">
+          <desc id="mapDesc">場地地圖：上方是講台，講台前是舞台帳；左邊是感恩帳（感恩牆、語音祝福卡）和投影牆；中間三塊野餐墊觀眾席；右上是 Spotlight 和拍照牆，右邊是餐食帳，右下是招待桌、頂天立地和入口；下方是音控台。</desc>
+          <defs>
+            <pattern id="mapDots" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".8" class="m-dot"/></pattern>
+          </defs>
+          <rect x="1" y="1" width="358" height="288" rx="10" class="m-ground"/>
+          <!-- 講台 + 舞台帳 -->
+          <rect x="110" y="10" width="140" height="30" rx="4" class="m-block"/>
+          <text x="180" y="30" class="m-t">講台</text>
+          <path d="M150 44h60l14 40-44 32-44-32z" class="m-tent"/>
+          <text x="180" y="76" class="m-t on">舞台帳</text>
+          <!-- Spotlight + 拍照牆 -->
+          <path d="M276 18l16 6-11 12z" class="m-ink"/>
+          <text x="298" y="31" class="m-t en" text-anchor="start">Spotlight</text>
+          <line x1="346" y1="46" x2="346" y2="114" class="m-wall"/>
+          <text x="336" y="84" class="m-t" text-anchor="end">拍照牆</text>
+          <!-- 感恩帳 + 投影牆 -->
+          <path d="M12 70l46-14 28 40-28 40-46-14z" class="m-tent"/>
+          <text x="44" y="101" class="m-t on">感恩帳</text>
+          <text x="46" y="152" class="m-s">感恩牆／</text><text x="46" y="165" class="m-s">語音祝福卡</text>
+          <line x1="14" y1="176" x2="14" y2="246" class="m-wall"/>
+          <text x="26" y="215" class="m-t" text-anchor="start">投影牆</text>
+          <!-- 野餐墊觀眾席 -->
+          <g transform="translate(128 168) rotate(35)"><rect x="-29" y="-29" width="58" height="58" rx="13" class="m-mat"/></g>
+          <g transform="translate(232 168) rotate(-35)"><rect x="-29" y="-29" width="58" height="58" rx="13" class="m-mat"/></g>
+          <rect x="151" y="180" width="58" height="54" rx="13" class="m-mat"/>
+          <text x="128" y="165" class="m-s">野餐墊</text><text x="128" y="179" class="m-s">觀眾席</text>
+          <text x="232" y="165" class="m-s">野餐墊</text><text x="232" y="179" class="m-s">觀眾席</text>
+          <text x="180" y="204" class="m-s">野餐墊</text><text x="180" y="218" class="m-s">觀眾席</text>
+          <!-- 餐食帳 + 招待桌 + 頂天立地 + 入口 -->
+          <path d="M316 132l26 15v30l-26 15-26-15v-30z" class="m-tent"/>
+          <text x="316" y="166" class="m-t on">餐食帳</text>
+          <rect x="258" y="210" width="50" height="22" rx="3" class="m-block"/>
+          <text x="283" y="225" class="m-s strong">招待桌</text>
+          <line x1="312" y1="208" x2="356" y2="208" class="m-ink-line"/>
+          <text x="334" y="225" class="m-s strong">頂天立地</text>
+          <line x1="356" y1="240" x2="356" y2="284" class="m-door"/>
+          <path d="M346 262h-14m5-5-5 5 5 5" class="m-arrow"/>
+          <text x="326" y="266" class="m-t door" text-anchor="end">入口</text>
+          <!-- 音控台 -->
+          <rect x="120" y="246" width="120" height="30" rx="4" class="m-block"/>
+          <text x="180" y="266" class="m-t">音控台</text>
+        </svg>
+      </div>
       <p class="sign" lang="en">with gratitude</p>
     </div>
   </div>
@@ -638,10 +725,9 @@ addEventListener("hashchange", () => route(true));
 route(false);
 
 /* ===== 表演時刻表：歌詞貼在 lyrics 的 `` 之間（可直接換行） ===== */
-const EVENT_DATE = "2026-11-14"; /* 例如 "2026-11-26"；設成 null 代表每天這個時段都會出現 */
-const ALWAYS_SHOW = false; /* 預覽用：true = 小圓圈一直顯示（不在演出時段就顯示第一組）；正式活動前改回 false */
+const EVENT_DATE = 2026-11-14; /* 活動日期，例如 "2026-11-26"；設成 null 代表每天這個時段都算演出中 */
 const SETS = [
-  { start:"01:50", end:"01:55", name:"第一組表演", group:"以理", gear:"電鋼琴・電吉他", songs:[
+  { start:"19:30", end:"19:50", name:"第一組表演", group:"以理", gear:"電鋼琴・電吉他", songs:[
     { title:"Love Yourself", artist:"Justin Bieber", lyrics:`
 For all the times that you rain on my parade 
 And all the clubs you get in using my name 
@@ -709,7 +795,7 @@ I love you 24/7, 365
 Now it’s 4 in the morning, suns set and 7 minutes with you and it’s heaven 
 Ain't an hour that rolls by, I love you 24/7, 365` }
   ]},
-  { start:"01:55", end:"02:00", name:"第二組表演", group:"培駿", gear:"木吉他", songs:[
+  { start:"20:00", end:"20:30", name:"第二組表演", group:"培駿", gear:"木吉他", songs:[
     { title:"稻香", artist:"周杰倫", lyrics:` 
 對這個世界如果你有太多的抱怨 
 跌倒了就不敢繼續往前走 
@@ -734,7 +820,8 @@ Ain't an hour that rolls by, I love you 24/7, 365` }
 笑一個吧 功成名就不是目的 
 讓自己快樂快樂這才叫做意義 
 童年的紙飛機 現在終於飛回我手裡 
-所謂的那快樂 赤腳在田裡追蜻蜓追到累了 
+所謂的那快樂 
+赤腳在田裡追蜻蜓追到累了 
 偷摘水果被蜜蜂給叮到怕了 誰在偷笑呢 
 我靠著稻草人吹著風唱著歌睡著了 
 哦 哦 午後吉他在蟲鳴中更清脆 
@@ -868,7 +955,7 @@ Oh思念是一種病` },
 雨季奉獻給大地 歲月奉獻給季節 
 我拿什麼奉獻給你 我的爹娘` }
   ]},
-  { start:"02:00", end:"02:05", name:"第三組表演", group:"家婕", gear:"電鋼琴・木吉他", songs:[
+  { start:"20:40", end:"21:00", name:"第三組表演", group:"家婕", gear:"電鋼琴・木吉他", songs:[
     { title:"年初目標", artist:"家婕", lyrics:`年初的目標完成了多少 是不是連內容都忘了 
 一個都做不到 沒關係 我還是很好 
 只要現在開始繼續乖乖躺好 
@@ -995,26 +1082,47 @@ function renderLetter(s){
     </details></li>`).join("");
   $("letterNext").textContent = nx ? `下一組：${nx.start} ${nx.group}` : "今晚最後一組，謝謝你的陪伴";
 }
-function tick(){
+/* 沒有表演時：信件改成今晚時刻表＋場地地圖 */
+function renderInfo(){
   const m = nowMin();
-  const cur = SETS.find(s => m >= toMin(s.start) && m < toMin(s.end)) || (ALWAYS_SHOW ? SETS[0] : null);
-  if (cur === shown) return;
-  shown = cur;
-  if (cur && !dlg.open) setTimeout(() => announce(cur), 700); /* 新的一組開始：放精靈 */
-  if (!cur) hideCallout();
-  nowBtn.hidden = !cur;
-  if (cur) {
-    $("nowLabel").textContent = `現正演出：${cur.group}，點開查看歌詞`;
-    if (!dlg.open) renderLetter(cur);
-  }
+  const nextIdx = SETS.findIndex(s => m < toMin(s.start));
+  $("letterTo").textContent = "Tonight…";
+  $("letterMeta").textContent = "秋奈：感恩祭";
+  $("letterTitle").textContent = "今晚的表演";
+  $("schedList").innerHTML = SETS.map((s, i) => {
+    const done = m >= toMin(s.end), live = !done && m >= toMin(s.start);
+    const st = live ? `<span class="st live">演出中</span>` : done ? `<span class="st">已結束</span>` : i === nextIdx ? `<span class="st next">下一組</span>` : "";
+    return `<li class="${done ? "done" : ""}"><time>${s.start} – ${s.end}</time><span class="who">${esc(s.group)}</span>${st}</li>`;
+  }).join("");
+  $("modeLive").hidden = true;
+  $("modeInfo").hidden = false;
 }
-nowBtn.addEventListener("click", () => {
-  renderLetter(shown);
+function openLetter(){
+  if (shown) {
+    renderLetter(shown);
+    $("letterTo").textContent = "Now playing…";
+    $("modeLive").hidden = false;
+    $("modeInfo").hidden = true;
+  } else renderInfo();
   dlg.classList.remove("closing");
   dlg.showModal();
   document.documentElement.style.overflow = "hidden";
   dlg.querySelector(".paper").scrollTop = 0;
-});
+}
+let started = false;
+function tick(){
+  const m = nowMin();
+  const cur = SETS.find(s => m >= toMin(s.start) && m < toMin(s.end)) || null;
+  if (started && cur === shown) return;
+  started = true;
+  shown = cur;
+  nowBtn.hidden = false; /* 圓圈一直都在：演出中＝歌詞，其他時間＝時刻表＋地圖 */
+  nowBtn.classList.toggle("idle", !cur);
+  $("nowLabel").textContent = cur ? `現正演出：${cur.group}，點開查看歌詞` : "查看今晚時刻表與場地地圖";
+  if (cur && !dlg.open) setTimeout(() => announce(cur), 700); /* 新的一組開始：放精靈 */
+  if (!cur) hideCallout();
+}
+nowBtn.addEventListener("click", openLetter);
 function closeLetter(){
   if (!dlg.open || dlg.classList.contains("closing")) return;
   if (reduce) { dlg.close(); return; }
@@ -1053,9 +1161,14 @@ function smoothPath(pts, steps = 14){
   out.push(pts[pts.length - 1]);
   return out;
 }
+/* 手機震動：精靈落進圓圈的那一刻「噠、噠、嗡——」
+   只有 Android 支援；而且使用者要先在頁面上點過任何地方，瀏覽器才允許震動 */
+function buzz(){
+  try { if (navigator.userActivation?.hasBeenActive !== false) navigator.vibrate?.([70, 60, 70, 60, 220]); } catch (e) {}
+}
 function announce(s){
   if (nowBtn.hidden || dlg.open) return;
-  if (reduce) { showCallout(s); return; }
+  if (reduce) { showCallout(s); buzz(); return; }
   const r = nowBtn.getBoundingClientRect(), W = innerWidth, H = innerHeight;
   const tx = r.left + r.width / 2, ty = r.top + r.height / 2;
   const path = smoothPath([[-40, H * .3], [W * .3, H * .18], [W * .72, H * .3], [W * .45, H * .48], [W * .25, H * .62], [W * .6, H * .7], [tx - 30, ty - 70], [tx, ty]]);
@@ -1089,13 +1202,13 @@ function announce(s){
     sp.remove();
     nowBtn.animate([{ transform: "scale(1)" }, { transform: "scale(1.22)" }, { transform: "scale(.96)" }, { transform: "scale(1)" }],
       { duration: 650, easing: "cubic-bezier(.23,1,.32,1)" });
-    showCallout(s);
+    showCallout(s); buzz();
   };
 }
 tick();
 setInterval(tick, 5000);
 /* 網址加上 ?letter 會直接打開信件 */
-if (new URLSearchParams(location.search).has("letter") && shown) nowBtn.click();
+if (new URLSearchParams(location.search).has("letter")) nowBtn.click();
 </script>
 </body>
 </html>
