@@ -242,9 +242,62 @@ button{font:inherit;color:inherit}
 .rv{opacity:0;transform:translateY(12px)}
 .rv.in{opacity:1;transform:none;transition:opacity 600ms var(--ease) var(--d,0ms),transform 600ms var(--ease) var(--d,0ms)}
 
+/* ---------- NOW PLAYING (bubble + letter) ---------- */
+.now-bubble{position:fixed;z-index:45;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(100px + env(safe-area-inset-bottom,0px));
+  width:60px;height:60px;border-radius:50%;border:0;padding:0;cursor:pointer;display:grid;place-items:center;color:var(--on-amber);
+  background:radial-gradient(circle at 35% 30%,oklch(0.93 0.1 82),var(--amber) 55%,var(--amber-d));
+  box-shadow:inset 0 0 0 4px oklch(1 0 0 / .25),0 10px 28px var(--shadow),0 0 36px oklch(0.84 0.105 76 / .35);
+  animation:bubble-in 520ms var(--ease) both;transition:transform 160ms var(--ease)}
+.now-bubble:active{transform:scale(.94)}
+.now-bubble svg{width:26px;height:26px;position:relative;z-index:1}
+.now-bubble .ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--amber);animation:ripple 2.4s ease-out infinite;pointer-events:none}
+.now-bubble .tag{position:absolute;top:-6px;right:-8px;z-index:2;padding:1px 7px;border-radius:99px;background:var(--cran-deep);border:1px solid oklch(0.7 0.11 32 / .7);
+  color:var(--ink);font-family:"Cinzel",var(--f-latin);font-weight:700;font-size:10px;letter-spacing:.12em;line-height:1.6}
+@keyframes bubble-in{from{opacity:0;transform:translateY(16px) scale(.6)}to{opacity:1;transform:none}}
+@keyframes ripple{from{transform:scale(1);opacity:.8}to{transform:scale(1.6);opacity:0}}
+
+.letter-dlg{border:0;padding:0;background:none;color:var(--on-amber);max-width:none;max-height:none;width:100%;height:100%;overflow:hidden}
+.letter-dlg[open]{display:grid;place-items:center}
+.letter-dlg::backdrop{background:oklch(0.12 0.03 35 / .72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.letter-dlg.closing{animation:dlg-out 200ms ease forwards}
+@keyframes dlg-out{to{opacity:0;transform:translateY(10px)}}
+.letter{--paper:oklch(0.95 0.025 85);--paper-2:oklch(0.88 0.04 75);position:relative;width:min(100% - 32px,420px);margin-top:84px;perspective:900px}
+/* envelope flap: closed over the top of the paper, then folds up and back */
+.letter .flap{position:absolute;left:0;right:0;top:0;height:92px;z-index:3;transform-origin:50% 0;transform-style:preserve-3d;
+  background:linear-gradient(180deg,var(--paper-2),oklch(0.83 0.05 70));clip-path:polygon(0 0,100% 0,50% 100%);
+  animation:flap-open 700ms var(--ease-in-out) 120ms both}
+.letter .seal{position:absolute;left:50%;top:58px;width:44px;height:44px;margin-left:-22px;z-index:4;font-size:17px;
+  animation:seal-off 380ms var(--ease) 80ms both}
+@keyframes flap-open{0%{transform:rotateX(0)}100%{transform:rotateX(180deg);z-index:0}}
+@keyframes seal-off{to{opacity:0;transform:scale(1.25)}}
+.letter .paper{position:relative;z-index:1;background:var(--paper);border-radius:4px 4px 16px 16px;box-shadow:0 24px 60px var(--shadow);
+  padding:30px 22px 24px;max-height:calc(100svh - 150px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain;
+  animation:paper-up 620ms var(--ease) 420ms both}
+@keyframes paper-up{from{transform:translateY(28px);opacity:.0}to{transform:none;opacity:1}}
+.letter .x{position:absolute;top:8px;right:8px;width:44px;height:44px;border:0;background:none;border-radius:50%;cursor:pointer;display:grid;place-items:center;color:oklch(0.4 0.05 45)}
+.letter .x svg{width:20px;height:20px}
+.letter .to{font-family:var(--f-latin);font-style:italic;font-size:17px;color:oklch(0.5 0.09 50)}
+.letter .meta{margin-top:10px;font-size:13px;letter-spacing:.12em;color:oklch(0.48 0.05 50)}
+.letter h2{font-family:var(--f-han);font-weight:700;font-size:30px;letter-spacing:.04em;line-height:1.3;color:oklch(0.28 0.05 40)}
+.letter .gear{font-size:14px;color:oklch(0.45 0.05 50)}
+.songs{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:0;border-top:1px dashed oklch(0.45 0.05 50 / .4)}
+.songs details{border-bottom:1px dashed oklch(0.45 0.05 50 / .4)}
+.songs summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:28px 1fr 20px;gap:8px;align-items:center;min-height:56px;padding:8px 0}
+.songs summary::-webkit-details-marker{display:none}
+.songs .no{font-family:var(--f-latin);font-style:italic;font-size:22px;color:oklch(0.55 0.11 55)}
+.songs .t{font-family:var(--f-han);font-weight:700;font-size:18px;line-height:1.4;color:oklch(0.28 0.05 40)}
+.songs .a{display:block;font-family:var(--f-body);font-weight:400;font-size:13px;color:oklch(0.48 0.05 50)}
+.songs .chev{width:18px;height:18px;color:oklch(0.48 0.05 50);transition:transform 200ms var(--ease)}
+.songs details[open] .chev{transform:rotate(180deg)}
+.songs .lyr{margin:0 0 18px 36px;font-size:15px;line-height:2;white-space:pre-line;color:oklch(0.3 0.04 40)}
+.songs .lyr.empty{color:oklch(0.5 0.04 50)}
+.letter .next{margin-top:18px;font-size:13px;color:oklch(0.48 0.05 50);text-align:right;font-family:var(--f-body)}
+.letter .sign{margin-top:6px;text-align:right;font-family:var(--f-latin);font-style:italic;font-size:17px;color:oklch(0.5 0.09 50)}
+
 /* reduced motion: drop movement, keep gentle colour/opacity changes */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition-property:opacity,color,background-color,border-color!important}
+  .letter .flap,.letter .seal,.now-bubble .ring{display:none}
 }
 </style>
 </head>
@@ -403,6 +456,31 @@ button{font:inherit;color:inherit}
   </nav>
 </div>
 
+<!-- ================= NOW PLAYING ================= -->
+<button class="now-bubble" id="nowBtn" type="button" aria-haspopup="dialog" hidden>
+  <span class="ring" aria-hidden="true"></span>
+  <span class="tag" aria-hidden="true">LIVE</span>
+  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>
+  <span class="sr-only" id="nowLabel">查看現正演出的歌詞</span>
+</button>
+
+<dialog class="letter-dlg" id="letterDlg" aria-labelledby="letterTitle">
+  <div class="letter">
+    <div class="flap" aria-hidden="true"></div>
+    <span class="seal coin amber" aria-hidden="true">恩</span>
+    <div class="paper">
+      <button class="x" id="letterClose" type="button" aria-label="關閉"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <p class="to" lang="en">Now playing…</p>
+      <p class="meta" id="letterMeta"></p>
+      <h2 id="letterTitle"></h2>
+      <p class="gear" id="letterGear"></p>
+      <ol class="songs" id="letterSongs"></ol>
+      <p class="next" id="letterNext"></p>
+      <p class="sign" lang="en">with gratitude</p>
+    </div>
+  </div>
+</dialog>
+
 <script>
 /* ===== 點數設定：改這裡的數字 ===== */
 const POINTS = { swap: 1 };
@@ -430,11 +508,11 @@ const TOPICS = [
     "回頭看一月的自己，你最想對他說什麼？"
   ]},
   { cat:"假如你們認識…", en:"What if…", color:"plum", items:[
-    "你覺得自己身上有什麼特質，是因為身邊某個人而慢慢培養出來的？你會感謝這個改變嗎？",
-    "有沒有一件事情，是你以前覺得理所當然，直到某一天失去或差點失去，才真正明白它的珍貴？",
-    "如果讓你選擇一種你希望自己一輩子都不要失去的能力或特質，你會選什麼？為什麼你如此珍惜它？",
-    "你覺得自己在人生中收到過最珍貴的禮物是什麼？這份禮物不一定是實體的，也可能是一種經歷、一個觀念，或一種被對待的方式。",
-    "如果有一天，你發現自己過上了現在這樣的生活，你覺得未來的自己會最感謝現在的你做了什麼？"
+    "你最欣賞對方的一個特質是什麼？",
+    "對方做過哪件事，讓你到現在還想說謝謝？",
+    "第一次見到對方的印象是什麼？現在呢？",
+    "認識對方之後，你覺得自己有沒有甚麼正向的影響？",
+    "有哪一句感謝，你一直想對對方說卻還沒說出口？"
   ]}
 ];
 
@@ -531,6 +609,368 @@ function route(moveFocus){
 }
 addEventListener("hashchange", () => route(true));
 route(false);
+
+/* ===== 表演時刻表：歌詞貼在 lyrics 的 `` 之間（可直接換行） ===== */
+const EVENT_DATE = "2026-11-14"; /* 例如 "2026-11-26"；設成 null 代表每天這個時段都會出現 */
+const ALWAYS_SHOW = false; /* 預覽用：true = 小圓圈一直顯示（不在演出時段就顯示第一組）；正式活動前改回 false */
+const SETS = [
+  { start:"01:20", end:"01:25", name:"第一組表演", group:"以理組", gear:"電鋼琴・電吉他", songs:[
+    { title:"Love Yourself", artist:"Justin Bieber", lyrics:`Verse 1 
+For all the times that you rain on my parade 
+And all the clubs you get in using my name 
+You think you broke my heart, oh girl for goodness sake 
+You think I'm crying, oh my oh, well I ain't 
+Verse 2 
+But when you told me that you hated my friends 
+The only problem was with you and not them 
+And every time you told me my opinion was wrong 
+And tried to make me forget where I came from 
+Verse 3 
+For all the times you made me feel small 
+I fell in love, now I fear nothin' at all 
+I never felt so low when I was vulnerable 
+Was I a fool to let you break down my walls? 
+Pre-Chorus 
+And I didn't wanna write a song 
+Cause I didn't want anyone thinking I still care 
+I don't but, you still hit my phone up 
+And baby I be movin' on and I think you should be somethin' 
+I don't wanna hold back, maybe you should know that 
+My mama don't like you and she likes everyone 
+And I never like to admit that I was wrong 
+And I've been so caught up in my job, didn't see what's going on 
+And now I know, I'm better sleeping on my own 
+Chorus 
+Cause if you like the way you look that much 
+Oh baby you should go and love yourself 
+And if you think that I'm still holdin' on to somethin' 
+You should go and love yourself 
+` },
+    { title:"24/7 365", artist:"elijah woods", lyrics:`Chorus 
+It’s been 3 years and 6 whole months since I saw your face that night 
+It took 5 seconds to fall in love and 2 more to make you mine 
+Now it’s 4 in the morning, suns set and 7 minutes with you and it’s heaven 
+Ain't an hour that rolls by, I love you 24/7, 365 
+Verse 1 
+Give you my name, if you wanted to 
+Key to my heart if you want it too 
+And I hope and pray that you'll stay right here 
+‘til we're old and gray in our last few years 
+I’m on a knee I just need a yes 
+A couple kids and a picket fence 
+Share the memories like an open book 
+Every page I read it still got me hooked 
+Pre-Chorus 1 
+And I’m fine spending my whole life on everything you like 
+Is it obvious that all of this is right? 
+Verse 2 
+I’ll share the last bite of every meal 
+I’ll wipe your tears when you're in your feels 
+And I’ll hold you close through a thunderstorm 
+When it's cold at night know i’ll keep you warm 
+Pre-Chorus 2 
+Cause I’m fine spending my whole life on everything you like 
+Is it obvious that all of this is right? 
+Chorus 
+Cause it’s been 3 years and 6 whole months since I saw your face that night 
+It took 5 seconds to fall in love and 2 more to make you mine 
+Now it’s 4 in the morning, suns set and 7 minutes with you and it’s heaven 
+Ain't an whole hour that rolls by, I love you 24/7, 365 
+Post-Chorus 
+I love you 24/7, 365 
+Outro 
+Now it’s 4 in the morning, suns set and 7 minutes with you and it’s heaven 
+Ain't an hour that rolls by, I love you 24/7, 365` }
+  ]},
+  { start:"01:25", end:"01:30", name:"第二組表演", group:"培駿組", gear:"木吉他", songs:[
+    { title:"稻香", artist:"周杰倫", lyrics:`Verse 1 
+對這個世界如果你有太多的抱怨 
+跌倒了就不敢繼續往前走 
+為什麼人要這麼的脆弱 墮落 
+請你打開電視看看 
+多少人為生命在努力勇敢的走下去 
+我們是不是該知足 
+珍惜一切 就算沒有擁有 
+Chorus 
+還記得你說家是唯一的城堡 
+隨著稻香河流繼續奔跑 
+微微笑 小時候的夢我知道 
+不要哭讓螢火蟲帶著你逃跑 
+鄉間的歌謠永遠的依靠 
+回家吧 回到最初的美好 
+Bridge 
+不要這麼容易就想放棄 就像我說的 
+追不到的夢想 換個夢不就得了 
+為自己的人生鮮艷上色 
+先把愛塗上喜歡的顏色 
+Verse 2 
+笑一個吧 功成名就不是目的 
+讓自己快樂快樂這才叫做意義 
+童年的紙飛機 現在終於飛回我手裡 
+所謂的那快樂 赤腳在田裡追蜻蜓追到累了 
+偷摘水果被蜜蜂給叮到怕了 誰在偷笑呢 
+我靠著稻草人吹著風唱著歌睡著了 
+哦 哦 午後吉他在蟲鳴中更清脆 
+哦 哦 陽光灑在路上就不怕心碎 
+珍惜一切 就算沒有擁有 
+Chorus 
+還記得你說家是唯一的城堡 
+隨著稻香河流繼續奔跑 
+微微笑 小時候的夢我知道 
+不要哭讓螢火蟲帶著你逃跑 
+鄉間的歌謠永遠的依靠 
+回家吧 回到最初的美好 
+` },
+    { title:"思念是一種病", artist:"張震嶽", lyrics:`Chorus 
+當你在穿山越嶺的另一邊 
+我在孤獨的路上沒有盡頭 
+Verse 1 
+一輩子有多少的來不及 發現 
+已經失去 最重要的東西 
+恍然大悟 早已遠去 
+為何總是在犯錯之後 才肯相信 
+錯的是自己 他們說這就是人生 
+試著體會 試著忍住眼淚 
+還是躲不開應該有的情緒 
+我不會奢求世界停止轉動 
+我知道逃避一點都沒有用 
+只是這段時間裡 尤其在夜裡 
+還是會想起 難忘的事情 
+我想我的思念是一種病 
+久久不能痊癒 
+Verse 2 
+汲汲營營 
+忘記身邊的人需要 愛和關心 
+藉口總是拉遠了距離 
+不知不覺 無聲無息 
+我們總是在抱怨事與願違 
+卻不願意回頭看看自己 
+想想自己到底做了什麼蠢事情 
+也許是上帝給我一個試煉 
+只是這傷口需要花點時間 
+只是會想念 過去的一切 
+那些人事物 會離我遠去 
+而我們終究也會遠離 變成回憶 
+Chorus 
+當你在穿山越嶺的另一邊 
+我在孤獨的路上沒有盡頭 
+時常感覺你在耳後的呼吸 
+卻未曾感覺你在心口的鼻息 
+Oh思念是一種病 
+Oh思念是一種病 
+Bridge 
+多久沒有說我愛你 
+多久沒有擁抱 你所愛的人 
+當這個世界不再那麼美好 
+只有愛可以讓他更好 
+我相信一切都來得及 
+別管那些紛紛擾擾 
+別讓不開心的事 停下了腳步 
+就怕你不說 就怕你不做 
+別讓遺憾 繼續 一切都來得及 
+Chorus 
+當你在穿山越嶺的另一邊 
+我在孤獨的路上沒有盡頭 
+時常感覺你在耳後的呼吸 
+卻未曾感覺你在心口的鼻息 
+Oh思念是一種病 
+Oh思念是一種病` },
+    { title:"祢一直都在", artist:"蔡嘉揚", lyrics:`祢一直都在 - 蔡嘉揚 
+Verse 
+時間滴答 滴答 離開 不會 再重來  
+回憶裡的 一點 一滴 祢是否還在  
+我以為自己 做什麼都還可以  
+當我在哭泣 才會知道多麼需要祢  
+Chorus 
+祢一直 在等待 等著我的心回來  
+祢知道我的依賴 對祢的愛一直存在  
+我不會 再離開 祢那溫柔的對待  
+祢的愛讓我明白 原來上帝一直都在` },
+    { title:"忽然之間", artist:"莫文蔚", lyrics:`Verse 1 
+忽然之間 天昏地暗 
+世界可以忽然什麼都沒有 
+我想起了你 再想到自己 
+我為什麼總在非常脆弱的時候 
+懷念你 
+Chorus 
+我明白 
+太放不開你的愛 
+太熟悉你的關懷 
+分不開 
+想你算是安慰還是悲哀 
+而現在 就算時針都停擺 
+就算生命像塵埃 分不開 
+我們也許反而更相信愛 
+Verse 2 
+如果這天地 最終會消失 
+不想一路走來珍惜的回憶 
+沒有你 
+Chorus 
+我明白 
+太放不開你的愛 
+太熟悉你的關懷 
+分不開 
+想你算是安慰還是悲哀 
+而現在 就算時針都停擺 
+就算生命像塵埃 分不開 
+我們也許反而更相信愛` },
+    { title:"奉獻", artist:"蘇芮", lyrics:`Verse 1 
+長路奉獻給遠方 玫瑰奉獻給愛情 
+我拿什麼奉獻給妳 我的愛人 
+白雲奉獻給草場 江河奉獻給海洋 
+我拿什麼奉獻給妳 我的朋友 
+Chorus 
+我拿什麼奉獻給妳 我不停的問 
+我不停的找 不停的想 
+Verse 2 
+白鴿奉獻給藍天 星光奉獻給長夜 
+我拿什麼奉獻給你 我的小孩 
+雨季奉獻給大地 歲月奉獻給季節 
+我拿什麼奉獻給你 我的爹娘 
+Chorus 
+我拿什麼奉獻給妳 我不停的問 
+我不停的找 不停的想 
+Verse 3 
+長路奉獻給遠方 玫瑰奉獻給愛情 
+我拿什麼奉獻給妳 我的愛人 
+白雲奉獻給草場 江河奉獻給海洋 
+我拿什麼奉獻給妳 我的朋友 
+Verse 4 
+白鴿奉獻給藍天 星光奉獻給長夜 
+我拿什麼奉獻給你 我的小孩 
+雨季奉獻給大地 歲月奉獻給季節 
+我拿什麼奉獻給你 我的爹娘` }
+  ]},
+  { start:"01:30", end:"01:35", name:"第三組表演", group:"家婕組", gear:"電鋼琴・木吉他", songs:[
+    { title:"年初目標", artist:"家婕", lyrics:`年初的目標完成了多少 是不是連內容都忘了 
+一個都做不到 沒關係 我還是很好 
+只要現在開始繼續乖乖躺好 
+規律的作息 晚睡又晚起 
+當我睜開眼睛 總是分不清楚朝夕 
+衣服明天洗 明天又忘記 今天到底星期幾 
+年初的目標完成了多少 是不是連內容都忘了 
+一個都做不到 沒關係 我還是很好 
+只要現在開始繼續乖乖躺好 
+規律的作息 晚睡又晚起 
+當我睜開眼睛 總是分不清楚朝夕 
+衣服明天洗 明天又忘記 今天到底星期幾 
+年底的遺憾累積了多少 是不是連知了也睡了 
+一個都做不到 沒關係 我們都很好 
+只要現在開始等明年再來就好 ` },
+    { title:"買你", artist:"魏如萱", lyrics:`你總是說 我想回家 然後轉身 淡淡的笑 
+你總是說 好累好忙 什麼時候 我們可以聊一聊 
+ㄟ 可不可以買你的不快樂 
+只是想陪你吃飯 看你笑笑 聽你最近 好不好 
+ㄟ 可不可以買你的不快樂 
+我們一起坐車 一起散步 一起看電影 好不好 
+你都不說 都不理我 然後轉身 淡淡的笑 
+你總問我 你還好嗎 什麼時候 我們可以變更好 
+ㄟ 可不可以買你一個鐘頭 
+只是想關心你呀 要你知道 還有我在 好不好 
+ㄟ 可不可以買你的不快樂 
+我們一起唱歌 一起牽手 一起聽音樂 
+ㄟ 可不可以買你一個鐘頭 
+只是想關心你呀 要你知道 還有我在 好不好 
+ㄟ 可不可以買你的不快樂 
+我們一起唱歌 一起牽手 一起聽音樂 好不好 
+把你的 不快樂 賣給我 然後抱一下 好不好 
+` },
+    { title:"恩典之路", artist:"讚美之泉", lyrics:`你是我的主 引我走正義路 
+高山或低谷 都是你在保護 
+萬人中唯獨 你愛我認識我 
+永遠不變的應許 
+這一生 都是祝福 
+一步又一步 這是恩典之路 
+你愛 你手 
+將我緊緊抓住 
+一步又一步 這是盼望之路 
+你愛 你手 
+牽引我走這人生路你是我的主 引我走正義路 
+高山或低谷 都是你在保護 
+萬人中唯獨 你愛我認識我 
+永遠不變的應許 
+這一生 都是祝福 
+一步又一步 這是恩典之路 
+你愛 你手 
+將我緊緊抓住 
+一步又一步 這是盼望之路 
+你愛 你手 
+牽引我走這人生路` }
+  ]}
+];
+
+const toMin = s => { const [h, m] = s.split(":").map(Number); return h * 60 + m; };
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+/* 測試用：網址加上 ?now=19:35 就能預覽那個時間點 */
+const fakeNow = new URLSearchParams(location.search).get("now");
+function nowMin(){
+  if (fakeNow && /^\d{1,2}:\d{2}$/.test(fakeNow)) return toMin(fakeNow);
+  const d = new Date();
+  if (EVENT_DATE) {
+    const today = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+    if (today !== EVENT_DATE) return -1;
+  }
+  return d.getHours() * 60 + d.getMinutes();
+}
+
+/* 預覽用：網址加上 ?demo，三組會在開頁後 1、3、5 分鐘開始（各 2 分鐘），不影響正式時間 */
+if (new URLSearchParams(location.search).has("demo")) {
+  const d = new Date(), base = d.getHours() * 60 + d.getMinutes();
+  const fmt = m => `${String(Math.floor(m / 60) % 24).padStart(2,"0")}:${String(m % 60).padStart(2,"0")}`;
+  SETS.forEach((s, i) => { s.start = fmt(base + 1 + i * 2); s.end = fmt(base + 3 + i * 2); });
+}
+
+const nowBtn = $("nowBtn"), dlg = $("letterDlg");
+let shown = null;
+function renderLetter(s){
+  const i = SETS.indexOf(s), nx = SETS[i + 1];
+  $("letterMeta").textContent = `${s.start} – ${s.end}・${s.name}`;
+  $("letterTitle").textContent = s.group;
+  $("letterGear").textContent = s.gear ? `配置：${s.gear}` : "";
+  $("letterSongs").innerHTML = s.songs.map((song, k) => `
+    <li><details${k === 0 ? " open" : ""}>
+      <summary><span class="no" aria-hidden="true">${k + 1}</span>
+        <span class="t">${esc(song.title)}<span class="a">${esc(song.artist)}</span></span>
+        <svg class="chev" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
+      ${song.lyrics.trim()
+        ? `<p class="lyr">${esc(song.lyrics.trim())}</p>`
+          : `<p class="lyr empty">歌詞準備中，先跟著旋律一起享受吧</p>`}
+    </details></li>`).join("");
+  $("letterNext").textContent = nx ? `下一組：${nx.start} ${nx.group}` : "今晚最後一組，謝謝你的陪伴";
+}
+function tick(){
+  const m = nowMin();
+  const cur = SETS.find(s => m >= toMin(s.start) && m < toMin(s.end)) || (ALWAYS_SHOW ? SETS[0] : null);
+  if (cur === shown) return;
+  shown = cur;
+  nowBtn.hidden = !cur;
+  if (cur) {
+    $("nowLabel").textContent = `現正演出：${cur.group}，點開查看歌詞`;
+    if (!dlg.open) renderLetter(cur);
+  }
+}
+nowBtn.addEventListener("click", () => {
+  renderLetter(shown);
+  dlg.classList.remove("closing");
+  dlg.showModal();
+  document.documentElement.style.overflow = "hidden";
+  dlg.querySelector(".paper").scrollTop = 0;
+});
+function closeLetter(){
+  if (!dlg.open || dlg.classList.contains("closing")) return;
+  if (reduce) { dlg.close(); return; }
+  dlg.classList.add("closing");
+  setTimeout(() => { dlg.close(); dlg.classList.remove("closing"); }, 200);
+}
+dlg.addEventListener("close", () => { document.documentElement.style.overflow = ""; });
+dlg.addEventListener("cancel", e => { e.preventDefault(); closeLetter(); });
+$("letterClose").addEventListener("click", closeLetter);
+dlg.addEventListener("click", e => { if (!e.target.closest(".paper")) closeLetter(); });
+tick();
+setInterval(tick, 5000);
+/* 網址加上 ?letter 會直接打開信件 */
+if (new URLSearchParams(location.search).has("letter") && shown) nowBtn.click();
 </script>
 </body>
 </html>
