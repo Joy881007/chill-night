@@ -725,7 +725,7 @@ addEventListener("hashchange", () => route(true));
 route(false);
 
 /* ===== 表演時刻表：歌詞貼在 lyrics 的 `` 之間（可直接換行） ===== */
-const EVENT_DATE = 2026-11-14; /* 活動日期，例如 "2026-11-26"；設成 null 代表每天這個時段都算演出中 */
+const EVENT_DATE = "2026-11-14"; /* 活動日期，例如 "2026-11-26"；設成 null 代表每天這個時段都算演出中 */
 const SETS = [
   { start:"19:30", end:"19:50", name:"第一組表演", group:"以理", gear:"電鋼琴・電吉他", songs:[
     { title:"Love Yourself", artist:"Justin Bieber", lyrics:`
